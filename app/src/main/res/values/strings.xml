@@ -1,0 +1,83 @@
+
+<resources>
+<string name="app_name">GoogleReCAPTCHA</string>
+<string name="my_app_key">6LecH9gUAAAAAN-572inHZtUQo7i4lOQHp0oTewN</string>
+<string name="secret_key">6LecH9gUAAAAANrNGfIpTn0V_uM4q0hgNmA7Ae9l</string>
+<!--    official works-->
+<string name="official_works_title">官方作品</string>
+<string name="more_official_works">更多官方作品</string>
+<!--    special reports-->
+<string name="special_reports_title">專題報導</string>
+<string name="more_special_reports">更多專題報導</string>
+<!--   editor_recommand-->
+<string name="editor_recommand_title">編輯推薦</string>
+<string name="more_editor_recommand">更多編輯推薦</string>
+<!--    novel_ranking-->
+<string name="novel_ranking_title">小說排行榜</string>
+<string name="more_novel_ranking">更多排名</string>
+<string name="pop_ranking">人氣榜</string>
+<string name="pop_male_ranking">男性人氣榜</string>
+<string name="pop_female_ranking">女性人氣榜</string>
+<!--    comic_ranking-->
+<string name="comic_ranking_title">漫畫排行榜</string>
+<string name="more_comic_ranking">更多排名</string>
+<!--    donate_ranking-->
+<string name="donate_ranking_title">斗內排行榜</string>
+<string name="more_donate_ranking">更多排名</string>
+<!--   announcement-->
+<string name="dannouncement_title">CCC公告</string>
+<string name="more_announcementg">公告一覽</string>
+<!--    bottomnavigation-->
+<string name="home">首頁</string>
+<string name="category">分類</string>
+<string name="bookshelf">書櫃</string>
+<string name="member">我的</string>
+
+<!--works tablayout title-->
+<string name="works_category_name">分類名稱</string>
+<string name="works_tablayout_title_menu">目錄</string>
+<string name="works_tablayout_title_informaion">情報</string>
+<string name="works_tablayout_title_support">支持</string>
+<string name="works_cardview_title_first">第</string>
+<string name="works_cardview_title_last">話</string>
+<!--    share-->
+<string name="work_share">分享作品</string>
+<string name="work_share_link">複製連結</string>
+<string name="work_share_facebook">Facebook</string>
+<string name="work_share_line">Line</string>
+<string name="work_share_more">更多</string>
+<string name="cancel">取消</string>
+<string name="add_to_collection">已加入收藏</string>
+<string name="remove_collection">已取消收藏</string>
+
+<!--    information-->
+<string name="information_introduction_title">簡介</string>
+<string name="information_author">作者</string>
+<string name="view_all_works">作品一覽</string>
+<string name="tag">標籤</string>
+<string name="other_buys">其他人也買了</string>
+<string name="recen_view">近期瀏覽</string>
+<string name="the_best_hit">熱門推薦</string>
+<!--    support-->
+<string name="reader_support">讀者支持</string>
+<string name="read_count">閱讀數</string>
+<string name="recommand_count">推薦數</string>
+<string name="favorite_count">收藏數</string>
+<string name="message_count">留言數</string>
+<string name="sponsor_donate">贊助斗內</string>
+<string name="donate_count">斗內數</string>
+<string name="total_money">總金額</string>
+<string name="donate_record">斗內紀錄</string>
+<string name="no_donate_record">目前尚無斗內紀錄</string>
+<string name="donate_works">斗內作品</string>
+<string name="copyed_to_clipboardmanager">已複製到剪貼簿</string>
+<string name="more_donate_record">更多斗內紀錄</string>
+
+<!--purchase-->
+<string name="please_select">請選擇 :  </string>
+<string name="you_have">您有 </string>
+<string name="rent48hours">租閱48小時</string>
+<string name="purseforever">永久購買</string>
+<string name="start_read">開始閱讀</string>
+<string name="goto_purchase">前往儲值</string>
+</resources>

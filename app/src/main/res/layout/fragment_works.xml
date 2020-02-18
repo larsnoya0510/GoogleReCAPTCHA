@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+
+    android:id="@+id/worksCoordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:fillViewport="true"
+        android:fitsSystemWindows="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/appbarConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/toolbarImageView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="fitCenter"
+                android:src="@android:drawable/sym_def_app_icon"
+                app:layout_constraintBottom_toTopOf="@+id/toolbarConstraintLayout"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toolbarConstraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/backExpandImageViewView"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_ccc_24_nav_back_white" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/toolbarFrameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:fitsSystemWindows="false"
+                app:layout_collapseMode="pin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/toolbarExpandConstraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/shape_works_toolbar_gradient"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/worksCategoryNameTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toTopOf="@+id/worksNameExpandTextView"
+                        app:layout_constraintEnd_toEndOf="@+id/worksNameExpandTextView"
+                        app:layout_constraintStart_toStartOf="@+id/worksNameExpandTextView"
+                        tools:text="分類名稱分類名稱分類名稱分類名稱" />
+
+                    <TextView
+                        android:id="@+id/worksNameExpandTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="4dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="作品名稱作品名稱作品名稱作品名稱作品名稱作品名稱作品名稱"
+                        android:textColor="@android:color/background_light"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/authorExpandTextView"
+                        app:layout_constraintEnd_toStartOf="@+id/worksCollectStateExpandImageView"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/authorExpandTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="作者名稱作者名稱作者名稱作者名稱作者名稱作者名稱作者名稱作者名稱作者名稱"
+                        android:textColor="@android:color/background_light"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/worksNameExpandTextView"
+                        app:layout_constraintStart_toStartOf="@+id/worksNameExpandTextView" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/worksCollectStateExpandLottieAnimationView"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:padding="0dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@+id/shareExpandImageView"
+                        app:layout_constraintEnd_toStartOf="@+id/shareExpandImageView" />
+
+                    <ImageView
+                        android:id="@+id/worksCollectStateExpandImageView"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:padding="0dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@+id/shareExpandImageView"
+                        app:layout_constraintEnd_toStartOf="@+id/shareExpandImageView"
+                        app:srcCompat="@drawable/works_collection_toolbar_expand_selector" />
+
+                    <ImageView
+                        android:id="@+id/shareExpandImageView"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:srcCompat="@drawable/ic_ccc_24_share_white" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/toolbarCollapseConstraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/colorFFFFFF"
+                    android:visibility="visible"
+                    tools:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/backCollapseImageView"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:padding="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_ccc_24_nav_back" />
+
+                    <TextView
+                        android:id="@+id/worksNameCollapseTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="31dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="15dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="作品名稱作品名稱作品名稱作品名稱作品名稱作品名稱"
+                        android:textColor="@color/color221815"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/worksCollectStateCollapseImageView"
+                        app:layout_constraintStart_toEndOf="@+id/backCollapseImageView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/worksCollectStateCollapseLottieAnimationView"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="16dp"
+                        android:paddingRight="12dp"
+                        android:paddingBottom="16dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@+id/shareCollapseImageView"
+                        app:layout_constraintEnd_toStartOf="@+id/shareCollapseImageView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/worksCollectStateCollapseImageView"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="16dp"
+                        android:paddingRight="12dp"
+                        android:paddingBottom="16dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@+id/shareCollapseImageView"
+                        app:layout_constraintEnd_toStartOf="@+id/shareCollapseImageView"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/works_collection_toolbar_collpse_state_selector" />
+
+                    <ImageView
+                        android:id="@+id/shareCollapseImageView"
+                        android:layout_width="48dp"
+                        android:layout_height="56dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="15dp"
+                        android:paddingRight="12dp"
+                        android:paddingBottom="15dp"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_ccc_24_nav_share" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/toolNestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="false"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:id="@+id/toolLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/worksTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/colorFFFFFF"
+                android:elevation="3dp"
+                app:tabIndicatorColor="@color/color221815"
+                app:tabRippleColor="#aaaaaa"
+                app:tabSelectedTextColor="#221815"
+                app:tabTextAppearance="@style/WorksTabLayoutStyle"
+                app:tabTextColor="#999999">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monday" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tuesday" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wednesday" />
+            </com.google.android.material.tabs.TabLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/worksViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="false" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/donateButtonConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/donate_button_background_gradient"
+        android:clickable="false"
+        android:elevation="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/donateWorkButtonConstraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/radius_shape_donate_button"
+            android:clickable="true"
+            android:elevation="0dp"
+            android:foreground="@drawable/ripple_effect_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/donateWorkTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/donate_works"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/donateGiftIconImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_ccc_24_btn_gift_white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/donateWorkTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
