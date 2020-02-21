@@ -5,6 +5,20 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    signingConfigs {
+        dada {
+            storeFile file('C:\\Users\\ASUS\\Desktop\\123.jks')
+            storePassword 'adadada'
+            keyAlias = 'dada'
+            keyPassword 'dadada'
+        }
+        zxczxc {
+            storeFile file('D:\\noyause\\androiduse\\keystoreUse\\zxczxc.jks')
+            storePassword 'zxczxc'
+            keyAlias = 'keyzxczxc'
+            keyPassword 'zxczxc'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -14,11 +28,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.dada
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.zxczxc
         }
     }
 }

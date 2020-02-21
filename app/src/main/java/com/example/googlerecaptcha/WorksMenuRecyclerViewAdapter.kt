@@ -61,7 +61,8 @@ class WorksMenuRecyclerViewAdapter(
         var worksCardView = view.findViewById<CardView>(R.id.worksChapterCardView)
         fun bind(position: Int) {
             Glide.with(context!!)
-                .load(base64DecodeBitmap(mInList[position].imgUrl))
+//                .load(base64DecodeBitmap(mInList[position].imgUrl))
+                .load(mInList[position].imgUrl)
                 .into(workIconImageView)
             chapterTextView.text = mInList[position].chapter.toString()
             worksTitleTextView.text = mInList[position].title

@@ -131,8 +131,8 @@ class OfflineDBHelper(var context: Context) :
             }
             return SidArray
         }
-        fun querySeriesAll(workId:Int): List<DB_OffLineInfo> {
-            val sql = "SELECT * from Series left join SeriesState on Series.SId = SeriesState.SId where workId=$workId"
+        fun querySeriesAll(): List<DB_OffLineInfo> {
+            val sql = "SELECT * from Series left join SeriesState on Series.SId = SeriesState.SId "
             var infoArray = mutableListOf<DB_OffLineInfo>()
             use {
                 val cursor = rawQuery(sql, null)
@@ -162,7 +162,7 @@ class OfflineDBHelper(var context: Context) :
             return infoArray
         }
         fun querySeriesByChapter(chapter:Int): List<DB_OffLineInfo> {
-            val sql = "SELECT * from Series left join SeriesState on Series.SId = SeriesState.SId where seriesNo=$chapter"
+            val sql = "SELECT * from Series  where seriesNo=$chapter"
             var infoArray = mutableListOf<DB_OffLineInfo>()
             use {
                 val cursor = rawQuery(sql, null)
@@ -175,8 +175,8 @@ class OfflineDBHelper(var context: Context) :
                             info.seriesNo = cursor.getLong(cursor.getColumnIndexOrThrow("seriesNo"))
                             info.date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
                             info.like = cursor.getLong(cursor.getColumnIndexOrThrow("like"))
-                            info.state = cursor.getLong(cursor.getColumnIndexOrThrow("state"))
-                            info.rentDate = cursor.getString(cursor.getColumnIndexOrThrow("rentDate"))
+//                            info.state = cursor.getLong(cursor.getColumnIndexOrThrow("state"))
+//                            info.rentDate = cursor.getString(cursor.getColumnIndexOrThrow("rentDate"))
                             infoArray.add(info)
                             if (cursor.isLast) {
                                 break
@@ -189,7 +189,33 @@ class OfflineDBHelper(var context: Context) :
         }
         return infoArray
     }
-        fun insertSeries( infoArray: MutableList<DB_SeriesInfo>,allImageDataList:MutableList<ImageLoadDataSet>): Long {
+        fun querySeriesDetailByChapter(chapter:Int): List<String> {
+            var fileNameList= mutableListOf<String>()
+            var querySid=querySeriesByChapter(chapter)
+            for( index in 0 until querySid.size) {
+                val sql = "SELECT * from SeriesDetial  where SId=${querySid[index].SId} order by dataOrder "
+                var infoArray = mutableListOf<DB_SeriesDetialInfo>()
+                use {
+                    val cursor = rawQuery(sql, null)
+                    if (cursor.count > 0) {
+                        if (cursor.moveToFirst()) {
+                            while (true) {
+                                val info = DB_SeriesDetialInfo()
+                                fileNameList.add(cursor.getString(cursor.getColumnIndexOrThrow("Base64Data")))
+                                if (cursor.isLast) {
+                                    break
+                                }
+                                cursor.moveToNext()
+                            }
+                        }
+                    }
+                    cursor.close()
+                }
+            }
+            return fileNameList
+        }
+
+        fun insertSeries( infoArray: MutableList<DB_SeriesInfo>,allImageDataList:MutableList<ImageLoadDataSetNew>): Long {
             var result: Long = -1
             for (i in infoArray.indices) {
                 val info = infoArray[i]
@@ -211,6 +237,7 @@ class OfflineDBHelper(var context: Context) :
                 }
                 else{
                     //取得新建Sid
+//                    var querySid=querySeriesByChapter(info.seriesNo.toInt())
                     var querySid=querySeriesByChapter(info.seriesNo.toInt())
                     for( index in 0 until querySid.size) {
                         //取得要匯入圖片資料
@@ -220,10 +247,11 @@ class OfflineDBHelper(var context: Context) :
                             mDB_SeriesDetialInfo.SId = querySid[index].SId
                             mDB_SeriesDetialInfo.dataOrder = allImageDataList[i].order.toLong()
                             mDB_SeriesDetialInfo.type = 1
-                            var base64ata = ""
-                            for (j in 0 until allImageDataList[i].base64Data.size) {
-                                base64ata += allImageDataList[i].base64Data[j]
-                            }
+//                            var base64ata =""
+//                            for (j in 0 until allImageDataList[i].base64Data.size) {
+//                                base64ata += allImageDataList[i].base64Data[j]
+//                            }
+                            var base64ata =allImageDataList[i].base64Data
                             mDB_SeriesDetialInfo.Base64Data = base64ata
                             mDB_SeriesDetialInfoList.add(mDB_SeriesDetialInfo)
                         }
@@ -339,7 +367,7 @@ class OfflineDBHelper(var context: Context) :
         fun delete( workId:Int): Int {
             var count = 0
             use {
-                var querySid=querySeriesAll(workId)
+                var querySid=querySeriesAll()
                 for(i in 0 until querySid.size) {
                     var condition = "SId=${querySid[i].SId}"
                     count = delete("SeriesState", condition, null)

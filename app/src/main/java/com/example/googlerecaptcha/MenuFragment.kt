@@ -1,6 +1,7 @@
 package com.example.googlerecaptcha
 
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,15 +16,22 @@ import com.bumptech.glide.Glide
 import com.example.googlerecaptcha.DB.DB_SeriesDetialInfo
 import com.example.googlerecaptcha.DB.DB_SeriesInfo
 import com.example.googlerecaptcha.DB.OfflineDBHelper
+import com.example.googlerecaptcha.data_class.ImageLoadDataSetNew
 import com.example.googlerecaptcha.data_class.WorksContentItem
 import com.example.googlerecaptcha.data_class.WorksResponseData
 import com.example.googlerecaptcha.data_class.WorksState
 import com.example.googlerecaptcha.fake_data.FakeWorksData
+import com.example.googlerecaptcha.viewmodel.ChapterDownloadViewModel
 import com.example.googlerecaptcha.viewmodel.WorksResponseDataViewModel
 import kotlinx.android.synthetic.main.fragment_menu.view.*
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_menu.*
 import kotlinx.android.synthetic.main.fragment_menu.view.clearOfflineButton
+import java.io.File
+import java.nio.file.Files.delete
+import java.nio.file.Files.isDirectory
+
+
 
 
 class MenuFragment : Fragment() {
@@ -32,10 +40,13 @@ class MenuFragment : Fragment() {
     lateinit var  mWorksResponseDataViewModel: WorksResponseDataViewModel
     lateinit var mWorksResponseDataObserver: Observer<WorksResponseData>
     lateinit var mWorksMenuRecyclerViewAdapter : WorksMenuRecyclerViewAdapter
+    lateinit var mChapterDownloadViewModel: ChapterDownloadViewModel
+    lateinit var mChapterImageListDataObserver: Observer<MutableList<ImageLoadDataSetNew>>
     lateinit var mWorkFragmentList: WorkFragmentList
     var orderType=0
     lateinit var menuFragmentRootView: View
     var onlineDataList=mutableListOf<WorksContentItem>()
+    var mNowSelectChapter=-1
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +57,8 @@ class MenuFragment : Fragment() {
 
         mWorksResponseDataViewModel= ViewModelProviders.of(activity!!).get(
             WorksResponseDataViewModel::class.java)
+        mChapterDownloadViewModel= ViewModelProviders.of(activity!!).get(
+            ChapterDownloadViewModel::class.java)
         mWorksMenuRecyclerViewAdapter=WorksMenuRecyclerViewAdapter(context!!, mutableListOf<WorksContentItem>())
         menuFragmentRootView.worksMenuRecyclerView.layoutManager=LinearLayoutManager(this.context)
         menuFragmentRootView.worksMenuRecyclerView.adapter=mWorksMenuRecyclerViewAdapter
@@ -78,6 +91,48 @@ class MenuFragment : Fragment() {
             }
 //            mWorksMenuRecyclerViewAdapter.updateWorksListData(it.data.menuSets.worksContent)
         }
+        mWorksResponseDataViewModel.getWorksResponseData().observe(this, mWorksResponseDataObserver)
+        mChapterImageListDataObserver = Observer {
+            //                    Toast.makeText(context,"Download",Toast.LENGTH_SHORT).show()
+            var SqlConnect= OfflineDBHelper.getInstance(context!!.applicationContext)
+            //觸發SQL
+            var seriesList= SqlConnect.querySeriesByChapter(mNowSelectChapter)
+            if(seriesList.size<=0) {
+                //寫入資料
+                var mData=mChapterDownloadViewModel.getChapterInfoData().value!!
+                var seriesInfoData = DB_SeriesInfo()
+                seriesInfoData.workId = WorkId.toLong()
+                seriesInfoData.seriesNo = mNowSelectChapter.toLong()
+                seriesInfoData.date = mData.date
+                seriesInfoData.title = mData.title
+                seriesInfoData.imgUrl = mData.imgUrl
+                seriesInfoData.like = mData.like.toLong()
+                seriesInfoData.seriesDetialList
+                seriesInfoData.state = mData.state.toLong()
+                var mRead = mData.read
+                seriesInfoData.read = mRead.toLong()
+                seriesInfoData.rentDate = mData.rentDate
+                var DB_SeriesInfoList = mutableListOf<DB_SeriesInfo>()
+                DB_SeriesInfoList.add(seriesInfoData)
+
+                var resule = SqlConnect.insertSeries(
+                    DB_SeriesInfoList,it
+//                    FakeWorksData.ChapterImageDataNew
+                )
+                if(resule>=1L){
+                    Toast.makeText(context, "下載完畢", Toast.LENGTH_SHORT).show()
+//                    mWorksResponseDataViewModel.changeDataPurchaseState(mNowSelectChapter)
+                }
+                else if(resule <=-1L){
+                    Toast.makeText(context, "下載失敗", Toast.LENGTH_SHORT).show()
+                }
+            }
+            else{
+                Toast.makeText(context, "已下載", Toast.LENGTH_SHORT).show()
+//                mWorksResponseDataViewModel.changeDataPurchaseState(mNowSelectChapter)
+            }
+        }
+        mChapterDownloadViewModel.getChapterImageListData().observe(this, mChapterImageListDataObserver)
         menuFragmentRootView.worksListOrderByimageView.setOnClickListener {
             when(orderType){
                 0->{
@@ -94,6 +149,15 @@ class MenuFragment : Fragment() {
             var result= SqlConnect.delete(WorkId)
             if(result==1){
                 Toast.makeText(context, "刪除完畢", Toast.LENGTH_SHORT).show()
+                getOfflineSqlData()
+                //清除內部檔案
+                val dir = this.context!!.getFilesDir()
+                if (dir.isDirectory) {
+                    val children = dir.list()
+                    for (i in children.indices) {
+                        File(dir, children[i]).delete()
+                    }
+                }
             }
             else{
                 Toast.makeText(context, "刪除失敗", Toast.LENGTH_SHORT).show()
@@ -102,51 +166,20 @@ class MenuFragment : Fragment() {
         mWorksMenuRecyclerViewAdapter.setOnItemCheckListener(object:WorksMenuRecyclerViewAdapter.OnItemCheckListener{
             override fun download(mChapter: Int, mData: WorksContentItem) {
                 if(mData.worksState.purchaseState==1){
-//                    Toast.makeText(context,"Download",Toast.LENGTH_SHORT).show()
-                    var SqlConnect= OfflineDBHelper.getInstance(context!!.applicationContext)
-                    //觸發SQL
-                    var seriesList= SqlConnect.querySeriesByChapter(mChapter)
-                    if(seriesList.size<=0) {
-                        //寫入資料
-                        var seriesInfoData = DB_SeriesInfo()
-                        seriesInfoData.workId = WorkId.toLong()
-                        seriesInfoData.seriesNo = mData.chapter.toLong()
-                        seriesInfoData.date = mData.date
-                        seriesInfoData.title = mData.title
-                        seriesInfoData.imgUrl = mData.imgUrl
-                        seriesInfoData.like = mData.heartsCount.toLong()
-                        seriesInfoData.seriesDetialList
-                        seriesInfoData.state = mData.worksState.purchaseState.toLong()
-                        var mRead = if (mData.worksState.readed == true) {
-                            1
-                        } else {
-                            0
-                        }
-                        seriesInfoData.read = mRead.toLong()
-                        seriesInfoData.rentDate = mData.worksState.rentExpirationDate ?: ""
-                        var DB_SeriesInfoList = mutableListOf<DB_SeriesInfo>()
-                        DB_SeriesInfoList.add(seriesInfoData)
-
-//                        var resule = SqlConnect.insertSeries(
-//                            DB_SeriesInfoList,
-//                            FakeWorksData.ChapterImageData
-//                        )
-                        var resule = SqlConnect.insertSeriesNew(
-                            DB_SeriesInfoList,
-                            FakeWorksData.ChapterImageDataNew
-                        )
-                        if(resule==1L){
-                            Toast.makeText(context, "下載完畢", Toast.LENGTH_SHORT).show()
-                            mWorksResponseDataViewModel.changeDataPurchaseState(mChapter)
-                        }
-                        else if(resule !=1L){
-                            Toast.makeText(context, "下載失敗", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    else{
-                        Toast.makeText(context, "已下載", Toast.LENGTH_SHORT).show()
-                    }
+                    var mChapterInfo = DB_SeriesInfo()
+                    mChapterInfo.workId = WorkId.toLong()
+                    mChapterInfo.seriesNo = mData.chapter.toLong()
+                    mChapterInfo.date = mData.date
+                    mChapterInfo.title = mData.title
+                    mChapterInfo.imgUrl = mData.imgUrl
+                    mChapterInfo.like = mData.heartsCount.toLong()
+                    mChapterInfo.seriesDetialList
+                    mChapterInfo.state = mData.worksState.purchaseState.toLong()
+                    mChapterDownloadViewModel.setChapterInfoData(mChapterInfo)
+                    mChapterDownloadViewModel.RequestImageData()
+                    mNowSelectChapter=mChapter
                 }
+
             }
 
             override fun onCheck(mChapter: Int,mData: WorksContentItem) {
@@ -154,42 +187,24 @@ class MenuFragment : Fragment() {
                 {
 
                 }
-                else {
+                else if(mData.worksState.purchaseState==6){
+                    if(menuFragmentRootView.OfflineSwitch.isChecked){
+                        var mIntent= Intent(context,ShowImgActivity::class.java)
+                        mIntent.putExtra("Chapter",mChapter)
+                        startActivity(mIntent)
+                    }
 
                 }
             }
         })
-        mWorksResponseDataViewModel.getWorksResponseData().observe(this, mWorksResponseDataObserver)
+
         mWorksResponseDataViewModel.RequestWorksData()
 
         //==offline 判斷
         menuFragmentRootView.OfflineSwitch.setOnCheckedChangeListener { compoundButton, isOn ->
             if(isOn==true){
                 //取得離線資料
-                var offlineDataList=mutableListOf<WorksContentItem>()
-                var SqlConnect= OfflineDBHelper.getInstance(context!!.applicationContext)
-                //觸發SQL
-                var seriesList= SqlConnect.querySeriesAll(WorkId)
-                for(i in 0 until seriesList.size){
-                    var mRead= seriesList[i].read==1L
-                    var mWorkState= WorksState(
-                        seriesList[i].state.toInt(),
-                        mRead,
-                        seriesList[i].rentDate,
-                        null,null,null
-                    )
-                    var mWorksContentItem=WorksContentItem(
-                        seriesList[i].seriesNo.toInt(),
-                        seriesList[i].date,
-                        seriesList[i].title,
-                        seriesList[i].imgUrl,
-                        seriesList[i].like.toInt(),
-                        mWorkState
-                        )
-                    offlineDataList.add(mWorksContentItem)
-                }
-                mWorksMenuRecyclerViewAdapter.updateWorksListData(offlineDataList)
-                clearOfflineButton.visibility=View.VISIBLE
+                getOfflineSqlData()
             }
             else{
                 //取得線上資料
@@ -200,6 +215,34 @@ class MenuFragment : Fragment() {
         }
         return menuFragmentRootView
     }
+
+    private fun getOfflineSqlData() {
+        var offlineDataList = mutableListOf<WorksContentItem>()
+        var SqlConnect = OfflineDBHelper.getInstance(context!!.applicationContext)
+        //觸發SQL
+        var seriesList = SqlConnect.querySeriesAll()
+        for (i in 0 until seriesList.size) {
+            var mRead = seriesList[i].read == 1L
+            var mWorkState = WorksState(
+                seriesList[i].state.toInt(),
+                mRead,
+                seriesList[i].rentDate,
+                null, null, null
+            )
+            var mWorksContentItem = WorksContentItem(
+                seriesList[i].seriesNo.toInt(),
+                seriesList[i].date,
+                seriesList[i].title,
+                seriesList[i].imgUrl,
+                seriesList[i].like.toInt(),
+                mWorkState
+            )
+            offlineDataList.add(mWorksContentItem)
+        }
+        mWorksMenuRecyclerViewAdapter.updateWorksListData(offlineDataList)
+        clearOfflineButton.visibility = View.VISIBLE
+    }
+
     companion object {
         @JvmStatic
         fun newInstance() = MenuFragment()

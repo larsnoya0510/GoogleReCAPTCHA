@@ -3,6 +3,8 @@ package com.example.googlerecaptcha.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.cccmp.api.APIFunction
+import com.example.googlerecaptcha.DB.DB_SeriesInfo
+import com.example.googlerecaptcha.data_class.ImageLoadDataSetNew
 import com.example.googlerecaptcha.data_class.WorksResponseData
 
 class ViewModel {
@@ -73,4 +75,33 @@ class WorksAppbarPositionViewModel: ViewModel(){
     fun getData(): MutableLiveData<Int> {
         return worksAppbarPositionData
     }
+}
+class ChapterDownloadViewModel() : ViewModel() {
+    private var ChapterInfoData = MutableLiveData<DB_SeriesInfo>()
+    private var ChapterImgResponseDataTrigger = MutableLiveData<Int>()
+    private var ChapterImageListData = MutableLiveData<MutableList<ImageLoadDataSetNew>>()
+    fun RequestImageData(){
+        //TODO 假資料
+        APIFunction.fakeGetImageData(this)
+    }
+    fun setChapterInfoData( mData: DB_SeriesInfo) {
+        ChapterInfoData.value=mData
+    }
+    fun getChapterInfoData(): MutableLiveData<DB_SeriesInfo> {
+        return ChapterInfoData
+    }
+//    fun setChapterDownloadResponseDataTrigger(result: Int, mData: MutableList<String>) {
+//        ChapterImgResponseDataTrigger.postValue(result)
+//        ChapterImageListData.postValue(mData)
+//    }
+//    fun setChapterDownloadResponseDataTrigger(result: Int) {
+//        ChapterImgResponseDataTrigger.postValue(result)
+//    }
+    fun setChapterImageListData( mData: MutableList<ImageLoadDataSetNew>){
+    ChapterImageListData.postValue(mData)
+}
+    fun getChapterImageListData(): MutableLiveData<MutableList<ImageLoadDataSetNew>> {
+        return ChapterImageListData
+    }
+
 }
